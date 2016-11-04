@@ -1,8 +1,20 @@
 var Sidebar = React.createClass({
   render: function(){
     return(
-      <div className ="col-xs-3 game-item">
-        This is the sidebar
+      <div className="col-xs-3 game-item" style={{borderLeft:'2px solid black', paddingLeft:'10px'}}>
+        <div style={{height:'350px'}}>
+          <div style={{textAlign:'center', margin:'10px'}}>656 Actions Remaining</div>
+          <div>
+            <b>Pokemon Caught:</b>
+            <div>lol there are no sprites for this yet</div>
+            <div>but there will be sprites here</div>
+          </div>
+        </div>
+        <div>
+          <hr />
+          <div>Use the WASD keys to move around the map and select options!</div>
+          <div>Wait at your current location by hitting the SPACE BAR and select an option using the ENTER key!</div>
+        </div>
       </div>
     );
   }
