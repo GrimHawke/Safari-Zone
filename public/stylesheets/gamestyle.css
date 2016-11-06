@@ -1,0 +1,41 @@
+table.gaem{
+  table-layout: fixed;
+  width: 750px;
+  height: 580px;
+  border: none;
+  border-spacing: 0px;
+  border-collapse: collapse;
+  background-repeat:no-repeat;
+  font:bold 18px courier;
+  margin-top:5px;
+  margin-left:1px;
+}
+table.gaem tr td{
+  text-align:center;
+  vertical-align:bottom;
+  padding: 0px;
+}
+img.pokemon {
+  max-width:150px;
+}
+img.boy {
+  max-width:200px;
+}
+table.gaem tr.ui td{
+  vertical-align:middle;
+  border: solid;
+}
+table.bird{
+  table-layout: fixed;
+  width: 750px;
+  height: 580px;
+  border: none;
+  border-spacing: 0px;
+  border-collapse: collapse;
+  margin-top:5px;
+  margin-left:1px;
+}
+table.bird tr td{
+  font-size: 2px;
+  padding: 0px;
+}
