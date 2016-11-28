@@ -1,11 +1,10 @@
 var express = require('express');
-
 var app = express();
 
-app.use(express.static('public'));
+var router = require('./routing/routes.js');
 
-//var routes = require('./routing/routes'); //I have no clue about this syntax, try it another way
-//app.use(routes);
+app.use(express.static('public'));
+app.use('/api', router)
 
 var server = app.listen(3000, function() {
 	var port = server.address().port;
