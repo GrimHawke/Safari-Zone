@@ -39,3 +39,7 @@ table.bird tr td{
   font-size: 2px;
   padding: 0px;
 }
+
+img {
+  image-rendering: pixelated;
+}

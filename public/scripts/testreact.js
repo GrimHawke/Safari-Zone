@@ -59,7 +59,7 @@ var BattleBoy = React.createClass({
         <td>
         </td>
         <td>
-          <img className="pokemon" src="pictures/pikachuboy.png"></img>
+          <img className="pokemon" src="pictures/pikachu.png"></img>
         </td>
       </tr>
       <tr>
