@@ -3,7 +3,7 @@ var Sidebar = React.createClass({
     return(
       <div className="col-xs-3 game-item" style={{borderLeft:'2px solid black', paddingLeft:'10px'}}>
         <div style={{height:'350px'}}>
-          <div style={{textAlign:'center', margin:'10px'}}>656 Actions Remaining</div>
+          <div style={{textAlign:'center', margin:'10px'}}><b>Score:</b> {this.props.score}</div>
           <div>
             <b>Pokemon Caught:</b>
             <div>lol there are no sprites for this yet</div>
@@ -53,13 +53,40 @@ var Map = React.createClass({
 });
 
 var BattleBoy = React.createClass({
+  getInitialState: function() {
+    return({
+      pokemon: "missingno",
+      rarity: 0
+    })
+  },
+
+  componentWillMount: function() {
+    const a = this;
+    axios.get('/api/generate').then(function(value){
+      a.setState({
+        pokemon: value.data.name,
+        rarity: value.data.rarity
+      });
+      return value.data;
+    });
+  },
+
+  pokemonFileName: function() {
+    return "pictures/" + this.state.pokemon + ".png";
+  },
+
+  componentWillUnmount: function() {
+    this.props.updateScore(this.state.rarity);
+    this.props.updateTurns();
+  },
+
   render: function() {
     return(<table className="gaem" style={{backgroundImage:'url(pictures/backgroundboy.png)'}}>
       <tr>
         <td>
         </td>
         <td>
-          <img className="pokemon" src="pictures/pikachu.png"></img>
+          <img className="pokemon" src= {this.pokemonFileName()} ></img>
         </td>
       </tr>
       <tr>
@@ -90,28 +117,54 @@ var BattleBoy = React.createClass({
 });
 
 var GameScreen = React.createClass({
+  getDefaultProps: function() {
+    return{"score": 0, "turns": 10}
+  },
+
   getInitialState: function(){
     return{gameState: 0}
   },
 
-  stateChange: function(){
+  changeState: function(){
     this.setState({
       gameState: (this.state.gameState + 1)%2
     })
+  },
+
+  updateTurns: function() {
+    this.props.turns -= 1;
+    if (this.props.turns < 0) {
+      this.setState({gameState:2})
+      const name = "ABC";
+      const score = this.props.score;
+      axios.post('/api/scores/' + name + '/' + score);
+    }
+  },
+
+  updateScore: function(amount) {
+    this.props.score += amount;
+    this.forceUpdate();
   },
 
   render: function(){
     var message = "";
     if (this.state.gameState == 0){
       message = (
-        <div className="col-xs-9 game-item" onClick={this.stateChange}>
-          <BattleBoy />
+        <div className="col-xs-9 game-item" onClick={this.changeState}>
+          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns}/>
         </div>
       )
     }
-    else{
+    else if (this.state.gameState == 1){
       message = (
-        <div className="col-xs-9 game-item" onClick={this.stateChange}>
+        <div className="col-xs-9 game-item" onClick={this.changeState}>
+          <Map />
+        </div>
+      )
+    }
+    else {
+      message = (
+        <div className="col-xs-9 game-item">
           <Map />
         </div>
       )
@@ -119,7 +172,7 @@ var GameScreen = React.createClass({
     return(
       <div className="row">
         {message}
-        <Sidebar />
+        <Sidebar score={this.props.score}/>
       </div>
     );
   }
