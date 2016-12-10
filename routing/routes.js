@@ -15,13 +15,27 @@ router.get('/generate', function(req, res){
 });
 
 router.get('/players', function(req, res){
-  //Currently does nothing
   //Should return a list of all players who have registered scores
+	var db = MongoClient.connect('mongodb://test1:test1@ds113628.mlab.com:13628/safarizonedb', function(err, db) {
+		if(err) { return console.dir(err); }
+		var myCollection = db.collection('scores');
+		myCollection.distinct("name").then(function(result){
+			res.send(result);
+		});
+
+	});
 });
 
 router.get('/scores', function(req, res){
-  //Currently does nothing
   //Should return a list of the highest or most recent scores in the game
+	var db = MongoClient.connect('mongodb://test1:test1@ds113628.mlab.com:13628/safarizonedb', function(err, db) {
+		if(err) { return console.dir(err); }
+		var myCollection = db.collection('scores');
+		myCollection.find({}, {"name": 1, "score": 1}).sort({score: -1}).limit(10).toArray(function(err, items){
+			if(err) throw err;
+			else res.send(items);
+		});
+	});
 });
 
 router.get('/scores/:id', function(req, res){
