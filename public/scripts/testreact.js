@@ -28,21 +28,45 @@ var Map = React.createClass({
       this.props.changeState();
     }
     else if(event.key == "w"){
-      if(y!=0 && this.returnTile(x,y-1) != 'blue' && this.returnTile(x,y-1) != 'royalblue'){this.props.setY(y-1);}
+      this.props.setPosition("up");
+      if(y!=0 && this.returnTile(x,y-1) != 'blue' && this.returnTile(x,y-1) != 'royalblue'){
+        this.props.changeTile(this.returnTile(x, y-1));
+        this.props.setNearOcean(this.nearOcean(x, y-1));
+        this.props.setY(y-1);
+      }
     }
     else if(event.key == "s"){
-      if(y!=17 && this.returnTile(x,y+1) != 'blue' && this.returnTile(x,y+1) != 'royalblue'){this.props.setY(y+1);}
+      this.props.setPosition("down");
+      if(y!=17 && this.returnTile(x,y+1) != 'blue' && this.returnTile(x,y+1) != 'royalblue'){
+        this.props.changeTile(this.returnTile(x, y+1));
+        this.props.setNearOcean(this.nearOcean(x, y+1));
+        this.props.setY(y+1);
+      }
     }
     else if(event.key == "a"){
-      if(x!=0 && this.returnTile(x-1,y) != 'blue' && this.returnTile(x-1,y) != 'royalblue'){this.props.setX(x-1);}
+      this.props.setPosition("left");
+      if(x!=0 && this.returnTile(x-1,y) != 'blue' && this.returnTile(x-1,y) != 'royalblue'){
+        this.props.changeTile(this.returnTile(x-1,y));
+        this.props.setNearOcean(this.nearOcean(x-1,y));
+        this.props.setX(x-1);
+      }
     }
     else if(event.key == "d"){
-      if(x!=23 && this.returnTile(x+1,y) != 'blue' && this.returnTile(x+1,y) != 'royalblue'){this.props.setX(x+1);}
+      this.props.setPosition("right");
+      if(x!=23 && this.returnTile(x+1,y) != 'blue' && this.returnTile(x+1,y) != 'royalblue'){
+        this.props.changeTile(this.returnTile(x+1,y));
+        this.props.setNearOcean(this.nearOcean(x+1,y));
+        this.props.setX(x+1);
+      }
     }
   },
 
   componentDidMount(){
     this.refs.toHaveFocus.focus();
+  },
+
+  redname: function() {
+    return "pictures/red" + this.props.getPosition() + ".png";
   },
 
   render: function() {
@@ -53,9 +77,8 @@ var Map = React.createClass({
       var columns = [];
       for(var j=0; j < this.width; j++) {
         var classstring = "row" + i + " column" + j;
-        var classcolor = "";
         if(this.props.getY()==i && this.props.getX()==j) {
-          columns.push(<td className={classstring} style={{backgroundColor:this.returnTile(j, i)}}><img src="pictures/redow.png"/></td>);
+          columns.push(<td className={classstring} style={{backgroundColor:this.returnTile(j, i)}}><img src={this.redname()}/></td>);
         }
         else {
           columns.push(<td className={classstring} style={{backgroundColor:this.returnTile(j, i)}}></td>);
@@ -92,9 +115,9 @@ var Map = React.createClass({
 
   nearOcean: function(x, y) {
     if (x>=3 && x<=10 || x>6 && (x+15-y) < 2 || y > this.height-6 && x >= 2 && x < (Math.round(this.width/3)*2 + y - Math.round(this.width/2)) + 5) {
-      return true;
+      return 1;
     }
-    return false;
+    return 0;
   }
 
 });
@@ -110,7 +133,8 @@ var BattleBoy = React.createClass({
 
   componentWillMount: function() {
     const a = this;
-    axios.get('/api/generate').then(function(value){
+    var apicall = '/api/generate/' + this.props.getTile() + '/' + this.props.getNearOcean();
+    axios.get(apicall).then(function(value){
       a.setState({
         pokemon: value.data.name,
         rarity: value.data.rarity
@@ -133,7 +157,8 @@ var BattleBoy = React.createClass({
   },
 
   render: function() {
-    return(<table className="game" style={{backgroundImage:'url(pictures/backgroundboy.png)'}}>
+    var backgroundstring = 'url(pictures/' + this.props.getTile() + ".png)"
+    return(<table className="game" style={{backgroundImage:backgroundstring}}>
       <tr>
         <td>
         </td>
@@ -168,14 +193,44 @@ var BattleBoy = React.createClass({
   }
 });
 
+var GameOver = React.createClass({
+  render: function() {
+    return (
+      <div className="gameover">
+        GAME!
+      </div>
+    );
+  }
+});
+
 var GameScreen = React.createClass({
   getDefaultProps: function() {
     return({
       "score": 0,
       "turns": 10,
       "xloc": 10,
-      "yloc": 10
+      "yloc": 10,
+      "tile": "darkgreen",
+      "nearocean": 1,
+      "position": "down"
     });
+  },
+
+  setPosition: function(newposition) {
+    this.props.position = newposition;
+    this.forceUpdate();
+  },
+
+  getPosition: function() {
+    return this.props.position;
+  },
+
+  setNearOcean: function(yesorno) {
+    this.props.nearocean = yesorno;
+  },
+
+  getNearOcean: function() {
+    return this.props.nearocean;
   },
 
   setX: function(newX) {
@@ -206,6 +261,14 @@ var GameScreen = React.createClass({
     })
   },
 
+  changeTile: function(color){
+    this.props.tile = color;
+  },
+
+  getTile: function() {
+    return this.props.tile;
+  },
+
   updateTurns: function() {
     this.props.turns -= 1;
     if (this.props.turns < 0) {
@@ -226,21 +289,21 @@ var GameScreen = React.createClass({
     if (this.state.gameState == 0){
       message = (
         <div className="col-xs-9 game-item">
-          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} changeState={this.changeState} />
+          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean}/>
         </div>
       )
     }
     else if (this.state.gameState == 1){
       message = (
         <div className="col-xs-9 game-item">
-          <Map changeState={this.changeState} getX={this.getX} getY={this.getY} setX={this.setX} setY={this.setY}/>
+          <Map changeState={this.changeState} getX={this.getX} getY={this.getY} setX={this.setX} setY={this.setY} changeTile={this.changeTile} setNearOcean={this.setNearOcean} setPosition={this.setPosition} getPosition={this.getPosition}/>
         </div>
       )
     }
     else {
       message = (
         <div className="col-xs-9 game-item">
-          <Map />
+          <GameOver />
         </div>
       )
     }

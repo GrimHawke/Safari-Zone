@@ -48,7 +48,14 @@ table.bird tr td{
   height: 31px;
   width: 31px;
 }
-
+div.gameover{
+  width: 750px;
+  height: 580px;
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+  vertical-align:middle;
+}
 img {
   image-rendering: pixelated;
 }
