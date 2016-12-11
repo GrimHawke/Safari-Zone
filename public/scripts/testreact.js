@@ -41,6 +41,10 @@ var Map = React.createClass({
     }
   },
 
+  componentDidMount(){
+    this.refs.toHaveFocus.focus();
+  },
+
   render: function() {
     var rows = [];
     var height = 18;
@@ -103,7 +107,7 @@ var Map = React.createClass({
       }
       rows.push(<tr>{columns}</tr>);
     }
-    return (<table className="bird" tabIndex="0" onKeyDown={this.keyPressed}>{rows}</table>);
+    return (<table className="bird" tabIndex="0" ref="toHaveFocus" onKeyDown={this.keyPressed}>{rows}</table>);
   }
 });
 
