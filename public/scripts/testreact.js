@@ -28,83 +28,71 @@ var Map = React.createClass({
       this.props.changeState();
     }
     else if(event.key == "w"){
-      if(y!=0){this.props.setY(y-1);}
+      if(y!=0 && this.returnTile(x,y-1) != 'blue' && this.returnTile(x,y-1) != 'royalblue'){this.props.setY(y-1);}
     }
     else if(event.key == "s"){
-      if(y!=17){this.props.setY(y+1);}
+      if(y!=17 && this.returnTile(x,y+1) != 'blue' && this.returnTile(x,y+1) != 'royalblue'){this.props.setY(y+1);}
     }
     else if(event.key == "a"){
-      if(x!=0){this.props.setX(x-1);}
+      if(x!=0 && this.returnTile(x-1,y) != 'blue' && this.returnTile(x-1,y) != 'royalblue'){this.props.setX(x-1);}
     }
     else if(event.key == "d"){
-      if(x!=23){this.props.setX(x+1);}
+      if(x!=23 && this.returnTile(x+1,y) != 'blue' && this.returnTile(x+1,y) != 'royalblue'){this.props.setX(x+1);}
     }
   },
 
   render: function() {
+    this.height = 18;
+    this.width = 24;
     var rows = [];
-    var height = 18;
-    var width = 24;
-    for(var i = 0; i < height; i++) {
+    for(var i = 0; i < this.height; i++) {
       var columns = [];
-      for(var j=0; j < width; j++) {
+      for(var j=0; j < this.width; j++) {
         var classstring = "row" + i + " column" + j;
         var classcolor = "";
-        if (i==9 || i > 9 && j == Math.round(height/2)+7) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'darkslategray'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'darkslategray'}}></td>);
-          }
-        } else if(j==6|| j==7 || j>6 && (j+15-i) < 2 || i > height-3 && j > 4 && j < (Math.round(width/3)*2 + i - Math.round(width/2))) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'blue'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'blue'}}></td>);
-          }
-        } else if((i+4)%7 < 5 && (j+2)%5 < 3 && (i+j)%9 < 4) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'darkgreen'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'darkgreen'}}></td>);
-          }
-        } else if((Math.round(i/2)*3+4)%12 > 8 && (j+2)%9 < 4 && (i*2+Math.round(j/3)*2+3)%9 < 7) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'royalblue'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'royalblue'}}></td>);
-          }
-        } else if((i*3-i^2+5)%10 < 7 && (j*2+3)%9 < 7 && (i*2+j)%10 < 7) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'green'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'green'}}></td>);
-          }
-        } else if((i*4-i^2+4)%13 < 9 && (j*2+3)%10 < 8 && (i*2+j+5)%10 < 7) {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'saddlebrown'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'saddlebrown'}}></td>);
-          }
-        } else {
-          if(this.props.getY()==i && this.props.getX()==j) {
-            columns.push(<td className={classstring} style={{backgroundColor:'sandybrown'}}><img src="pictures/redow.png"/></td>);
-          }
-          else {
-            columns.push(<td className={classstring} style={{backgroundColor:'sandybrown'}}></td>);
-          }
+        if(this.props.getY()==i && this.props.getX()==j) {
+          columns.push(<td className={classstring} style={{backgroundColor:this.returnTile(j, i)}}><img src="pictures/redow.png"/></td>);
+        }
+        else {
+          columns.push(<td className={classstring} style={{backgroundColor:this.returnTile(j, i)}}></td>);
         }
       }
       rows.push(<tr>{columns}</tr>);
     }
     return (<table className="bird" tabIndex="0" onKeyDown={this.keyPressed}>{rows}</table>);
+  },
+
+  returnTile: function(x, y) {
+    if (y==9 || y > 9 && x == Math.round(this.height/2)+7) {
+      return 'darkslategray';
+    }
+    else if (x==6 || x==7 || x>6 && (x+15-y) < 2 || y > this.height-3 && x > 4 && x < (Math.round(this.width/3)*2 + y - Math.round(this.width/2))) {
+      return 'blue';
+    }
+    else if ((y+4)%7 < 5 && (x+2)%5 < 3 && (y+x)%9 < 4) {
+      return 'darkgreen';
+    }
+    else if ((Math.round(y/2)*3+4)%12 > 8 && (x+2)%9 < 4 && (y*2+Math.round(x/3)*2+3)%9 < 7) {
+      return 'royalblue';
+    }
+    else if ((y*3-y^2+5)%10 < 7 && (x*2+3)%9 < 7 && (y*2+x)%10 < 7) {
+      return 'green';
+    }
+    else if((y*4-y^2+4)%13 < 9 && (x*2+3)%10 < 8 && (y*2+x+5)%10 < 7) {
+      return 'saddlebrown';
+    }
+    else {
+      return 'sandybrown';
+    }
+  },
+
+  nearOcean: function(x, y) {
+    if (x>=3 && x<=10 || x>6 && (x+15-y) < 2 || y > this.height-6 && x >= 2 && x < (Math.round(this.width/3)*2 + y - Math.round(this.width/2)) + 5) {
+      return true;
+    }
+    return false;
   }
+
 });
 
 var BattleBoy = React.createClass({
