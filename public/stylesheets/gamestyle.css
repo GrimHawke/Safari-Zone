@@ -81,6 +81,7 @@ table.highscore {
   border-color: black;
   margin-top: 5px;
   margin-bottom: 25px;
+  font-size: 14px;
 }
 
 table.highscore tr{

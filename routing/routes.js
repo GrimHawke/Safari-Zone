@@ -100,7 +100,6 @@ router.get('/scores', function(req, res){
 });
 
 router.get('/scores/:id', function(req, res){
-  //Currently does nothing
   //Should return a list all scores acheived by a specified player
   var player = req.params.id;
 	var db = MongoClient.connect('mongodb://test1:test1@ds113628.mlab.com:13628/safarizonedb', function(err, db) {
@@ -108,7 +107,7 @@ router.get('/scores/:id', function(req, res){
 
 	    var myCollection = db.collection('scores');
 
-	    myCollection.find({"name" : player}).toArray(function(err,items) {
+	    myCollection.find({"name" : player}).sort({date: -1}).limit(10).toArray(function(err,items) {
 				if (err) throw err;
 				else res.send(items);
 			});
@@ -116,7 +115,6 @@ router.get('/scores/:id', function(req, res){
 });
 
 router.post('/scores/:id/:score', function(req, res){
-  //Currently does nothing
   //Should update scores for a specified player based on what is contained in the request body;
   var myscore = req.params.score;
   var myplayer = req.params.id;
