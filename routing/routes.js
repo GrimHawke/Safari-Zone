@@ -9,7 +9,7 @@ var map = {
 		2: {name:"scraggy",rarity:30},
 		3: {name:"shuckle",rarity:70},
 		4: {name:"rattata",rarity:10},
-		5: {name:"numel",rarity:50}
+		5: {name:"numel",rarity:50},
 		length: 6
 	},
 	darkgreen: {
@@ -18,7 +18,7 @@ var map = {
 		2: {name:"foongus",rarity:30},
 		3: {name:"heracross",rarity:70},
 		4: {name:"rotom", rarity:80},
-		5: {name:"duskull", rarity:60}
+		5: {name:"duskull", rarity:60},
 		length: 6
 	},
 	green: {
