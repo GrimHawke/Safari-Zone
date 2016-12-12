@@ -39,20 +39,16 @@ var GameOver = React.createClass({
     }
 
     return (
-      <div className="gameover">
+      <div>
         <div className="title">
           Game Over!
         </div>
-        <div className="title">
+        <div className="title2">
           {name} Recent Scores
         </div>
-        <div style={{margin: '20px 0px 20px 0px'}}>
-        </div>
-        <div>
-          <table className="highscore" style={{marginLeft: "auto", marginRight: "auto"}}>
-            {rows}
-          </table>
-        </div>
+        <table className="scoretable">
+          {rows}
+        </table>
         <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.toMainMenu}>
           To Main Screen
         </div>
