@@ -43,9 +43,6 @@ var NewGameScreen = React.createClass({
             <div className="button" style={{margin:'2px 0px 4px 0px'}} onClick={this.toHighScores}>
               High Scores
             </div>
-            <div className="button" style={{margin:'2px 0px 4px 0px'}} onClick={this.toAllPlayers}>
-              View All Players
-            </div>
             <div style={{margin:'2px 0px 4px 0px', padding:'10px 0px 10px 0px'}}>
 
             </div>

@@ -2,12 +2,44 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient;
 var myCollection;
+var pokemon = {
+	"abra": {rarity:60},
+	"bidoof": {rarity:10},
+	"bronzor": {rarity:80},
+	"bulbasaur": {rarity:30},
+	"caterpie": {rarity:10},
+	"charmander": {rarity:30},
+	"corsola": {rarity:70},
+	"deino": {rarity:80},
+	"dratini": {rarity:80},
+	"duskull": {rarity:60},
+	"foongus": {rarity:30},
+	"gastly": {rarity:60},
+	"gible": {rarity:60},
+	"heracross": {rarity:70},
+	"houndour": {rarity:40},
+	"krabby": {rarity:40},
+	"mawile": {rarity:50},
+	"mew": {rarity:200},
+	"natu": {rarity:30},
+	"numel": {rarity:50},
+	"pikachu": {rarity:30},
+	"rattata": {rarity:10},
+	"rotom": {rarity:80},
+	"sandile": {rarity:40},
+	"scraggy": {rarity:30},
+	"shuckle": {rarity:80},
+	"snover": {rarity:70},
+	"squirtle": {rarity:30},
+	"wingull": {rarity:30},
+	"zubat": {rarity:10}
+}
 var map = {
 	sandybrown: {
 		0: {name:"gastly",rarity:60},
 		1: {name:"sandile",rarity:40},
 		2: {name:"scraggy",rarity:30},
-		3: {name:"shuckle",rarity:70},
+		3: {name:"shuckle",rarity:80},
 		4: {name:"rattata",rarity:10},
 		5: {name:"numel",rarity:50},
 		length: 6
@@ -31,7 +63,7 @@ var map = {
 	},
 	darkslategray: {
 		0: {name:"abra",rarity:50},
-		1: {name:"dratini",rarity:80},
+		1: {name:"deino",rarity:80},
 		2: {name:"gastly",rarity:60},
 		3: {name:"natu",rarity:30},
 		4: {name:"scraggy",rarity:30},
