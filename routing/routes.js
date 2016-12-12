@@ -157,7 +157,7 @@ router.post('/scores/:id/:score', function(req, res){
 
 			var myCollection = db.collection('scores');
 
-			myCollection.insert({name: myplayer, score: myscore, date: mydate}, function(err, result) {
+			myCollection.insert({name: myplayer, score: myscore, date: mydate}, {w: 1}, function(err, result) {
 				if(err) throw err;
 			});
 		});

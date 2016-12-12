@@ -125,7 +125,9 @@ var AppController = React.createClass({
       axios.post('/api/scores/' + name + '/' + score);
       this.changeState(3);
     }
-    this.updateTurns();
+    else{
+      this.updateTurns();
+    }
   },
 
   updateTurns: function() {
