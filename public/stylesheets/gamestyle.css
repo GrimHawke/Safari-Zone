@@ -1,4 +1,4 @@
-table.gaem{
+table.game{
   table-layout: fixed;
   width: 750px;
   height: 580px;
@@ -10,21 +10,34 @@ table.gaem{
   margin-top:5px;
   margin-left:1px;
 }
-table.gaem tr td{
+
+table.game tr td{
   text-align:center;
   vertical-align:bottom;
   padding: 0px;
 }
+
 img.pokemon {
   max-width:150px;
 }
+
 img.boy {
   max-width:200px;
 }
-table.gaem tr.ui td{
+
+table.game tr.ui td{
   vertical-align:middle;
   border: solid;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor:pointer;
+  height:120px;
 }
+
 table.bird{
   table-layout: fixed;
   width: 750px;
@@ -35,7 +48,114 @@ table.bird{
   margin-top:5px;
   margin-left:1px;
 }
+
 table.bird tr td{
   font-size: 2px;
   padding: 0px;
+  height: 31px;
+  width: 31px;
+}
+
+div.gameover{
+  width: 750px;
+  height: 580px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+div.gameover:first-child{
+  font-weight: bold;
+  font-size: 30px;
+}
+
+div.button {
+  border-style: solid;
+  font-weight: bold;
+  border-width: 1px;
+  margin: 2px 0px 4px 0px;
+  padding: 10px 0px 10px 0px;
+  cursor: pointer;
+  text-align: center;
+  vertical-align:middle;
+  font-size: 14px;
+  width: 360px;
+}
+
+.scoretable{
+  font-size: 14px;
+  border-style: solid dotted;
+  border-width: 3px 1px 3px 1px;
+  width: 500px;
+  border-color: black;
+  margin-top: 5px;
+  margin-bottom: 25px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.scoretable tr{
+  border-style: solid none solid none;
+  border-width: 3px;
+  border-color: black;
+}
+
+.scoretable th{
+  border-style: none dashed;
+  padding: 3px 5px 3px 5px;
+  border-width: 1px;
+  border-color: gray;
+}
+
+.scoretable td{
+  border-style: none dashed;
+  padding: 3px 5px 3px 5px;
+  border-width: 1px;
+  border-color: gray;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+.title2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+img {
+  image-rendering: pixelated;
+}
+
+table.caught tr td{
+  padding: 0px 2px 0px 10px;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+img.tinypoke {
+  width: 32px;
+  height: 32px;
+}
+
+#game{
+  height: 600px;
+  width: 1000px;
+  padding: 1px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 2px solid black;
+  border-radius: 10px;
+  box-shadow: -1px 1px 5px 0px rgba(0,0,0,0.75);
+}
+
+.game-item{
+  height: 595px;
 }
