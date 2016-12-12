@@ -227,18 +227,56 @@ var BattleBoy = React.createClass({
 });
 
 var GameOver = React.createClass({
+  getInitialState: function(){
+    return({playerscores: {}});
+  },
+
+  componentWillMount: function() {
+    const a = this;
+    var apicall = '/api/scores/' + this.props.getName();
+    axios.get(apicall).then(function(value){
+      a.setState({
+        playerscores: value.data
+      });
+    });
+  },
+
   render: function() {
+    var name = this.props.getName();
+    var playerscores = this.state.playerscores;
+    var rows = [];
+    rows.push(
+      <tr>
+        <th>Score</th>
+        <th>Date</th>
+      </tr>
+    );
+    for (var i in playerscores) {
+      var columns = [];
+      var date = JSON.stringify(new Date(playerscores[i].date));
+      date = date.substring(1,11) + ", " + date.substring(12,17) + " UTC";
+      columns.push(<td>{playerscores[i].score} points</td>);
+      columns.push(<td>{date}</td>);
+      rows.push(<tr>{columns}</tr>);
+    }
+
     return (
       <div className="gameover">
-        <div>
-          GAME!
+        <div className="title">
+          Game Over!
+        </div>
+        <div className="title">
+          {name} Recent Scores
         </div>
         <div style={{margin: '20px 0px 20px 0px'}}>
         </div>
         <div>
-          <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.toMainMenu}>
-            To Main Screen
-          </div>
+          <table className="highscore" style={{marginLeft: "auto", marginRight: "auto"}}>
+            {rows}
+          </table>
+        </div>
+        <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.toMainMenu}>
+          To Main Screen
         </div>
       </div>
     );
@@ -290,7 +328,7 @@ var HighScoreScreen = React.createClass({
     }
     return (
       <div className="highscorepage" style={{padding: "5px 8px 5px 8px"}}>
-        <div className="title" onClick={this.goBack}>
+        <div className="title">
           HIGH SCORES
         </div>
         <div>
@@ -314,6 +352,10 @@ var NewGameScreen = React.createClass({
 
   toHighScores: function(){
     this.props.changeState(4);
+  },
+
+  toAllPlayers: function(){
+    this.props.changeState(5);
   },
 
   componentDidMount(){
@@ -348,7 +390,7 @@ var NewGameScreen = React.createClass({
             <div className="button" style={{margin:'2px 0px 4px 0px'}} onClick={this.toHighScores}>
               High Scores
             </div>
-            <div className="button" style={{margin:'2px 0px 4px 0px'}}>
+            <div className="button" style={{margin:'2px 0px 4px 0px'}} onClick={this.toAllPlayers}>
               View All Players
             </div>
             <div style={{margin:'2px 0px 4px 0px', padding:'10px 0px 10px 0px'}}>
@@ -364,6 +406,44 @@ var NewGameScreen = React.createClass({
         {message}
       </div>
     );
+  }
+});
+
+var AllPlayers = React.createClass({
+  getInitialState: function(){
+    return({players:{}});
+  },
+
+  componentWillMount: function() {
+    const a = this;
+    var apicall = '/api/players'
+    axios.get(apicall).then(function(value){
+      a.setState({
+        players: value.data
+      });
+    });
+  },
+
+  goBack: function(){
+    this.props.changeState(3);
+  },
+
+  render: function(){
+    var players = this.state.players;
+    var playerArr = [];
+    for(var i in players){
+      playerArr.push(players[i]);
+    }
+    return(
+      <div>
+        <div>
+          {playerArr}
+        </div>
+        <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.goBack}>
+          To Main Screen
+        </div>
+      </div>
+    )
   }
 });
 
@@ -531,7 +611,7 @@ var GameScreen = React.createClass({
     else if (this.state.gameState == 2) {
       message = (
         <div className="col-xs-9 game-item">
-          <GameOver changeState={this.changeState} resetScore={this.resetScore}/>
+          <GameOver changeState={this.changeState} getName={this.getName} resetScore={this.resetScore}/>
         </div>
       )
     }
@@ -546,6 +626,13 @@ var GameScreen = React.createClass({
       message = (
         <div className="col-xs-9 game-item">
           <HighScoreScreen changeState={this.changeState}/>
+        </div>
+      )
+    }
+    else if (this.state.gameState == 5){
+      message = (
+        <div className="col-xs-9 game-item">
+          <AllPlayers changeState={this.changeState}/>
         </div>
       )
     }
