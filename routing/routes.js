@@ -33,7 +33,7 @@ var map = {
 		0: {name:"abra",rarity:50},
 		1: {name:"dratini",rarity:80},
 		2: {name:"gastly",rarity:60},
-		3: {name:"natu",rarity:40},
+		3: {name:"natu",rarity:30},
 		4: {name:"scraggy",rarity:30},
 		5: {name:"squirtle",rarity:30},
 		length: 6
@@ -49,26 +49,26 @@ var map = {
 	},
 	ocean: {
 		0: {name:"wingull",rarity:30},
-		1: {name:"corsola",rarity:60},
+		1: {name:"corsola",rarity:70},
 		2: {name:"krabby",rarity:40},
 		length: 3
 	},
 	special: {
-		0: {name:"mew",rarity:150},
+		0: {name:"mew",rarity:200},
 		length: 1
 	},
 	mewchance: {
-		0: {name:"abra",rarity:50},
-		1: {name:"bulbasaur",rarity:30},
-		2: {name:"caterpie",rarity:10},
-		3: {name:"charmander",rarity:30},
-		4: {name:"dratini",rarity:80},
-		5: {name:"gastly",rarity:60},
-		6: {name:"krabby",rarity:40},
-		7: {name:"pikachu",rarity:30},
-		8: {name:"rattata",rarity:10},
-		9: {name:"squirtle",rarity:30},
-		10: {name:"zubat",rarity:10},
+		0: {name:"abra",rarity:1},
+		1: {name:"bulbasaur",rarity:5},
+		2: {name:"caterpie",rarity:3},
+		3: {name:"charmander",rarity:5},
+		4: {name:"dratini",rarity:1},
+		5: {name:"gastly",rarity:5},
+		6: {name:"krabby",rarity:2},
+		7: {name:"pikachu",rarity:1},
+		8: {name:"rattata",rarity:3},
+		9: {name:"squirtle",rarity:5},
+		10: {name:"zubat",rarity:3},
 		length: 11
 	}
 }
@@ -78,12 +78,13 @@ router.get('/', function(req, res){
 });
 
 router.get('/mewpoke/:name', function(req, res){
-	for (var i in map['mewchance']) {
-		if (map['mewchance'][i]['name'] == req.params.name) {
-			return map['mewchance'][i]['rarity']/10;
+	for (var i=0; i<map.mewchance.length; i++) {
+		if (map.mewchance[i].name == req.params.name) {
+			res.json(map.mewchance[i].rarity);
+			return;
 		}
 	}
-	return 0;
+	res.json(0);
 });
 
 router.get('/generate/:tile/:nearocean/:mewchance', function(req, res){
@@ -92,13 +93,13 @@ router.get('/generate/:tile/:nearocean/:mewchance', function(req, res){
 	if (req.params.tile == "green") {
 		var rand = Math.floor(Math.random()*30);
 		if (rand <= req.params.mewchance) {
-			res.json(map['special'][0]);
+			res.json(map.special[0]);
 			return;
 		}
 	}
-  var rand = Math.floor(Math.random()*(map[req.params.tile]['length']+map['ocean']['length']*req.params.nearocean));
-	if (req.params.nearocean==1 && rand >= map[req.params.tile]['length']) {
-		res.json(map['ocean'][rand-map[req.params.tile]['length']]);
+  var rand = Math.floor(Math.random()*(map[req.params.tile].length+map['ocean'].length*req.params.nearocean));
+	if (req.params.nearocean==1 && rand >= map[req.params.tile].length) {
+		res.json(map['ocean'][rand-map[req.params.tile].length]);
 	}
 	else {
   	res.json(map[req.params.tile][rand]);
