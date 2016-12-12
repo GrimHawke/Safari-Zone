@@ -3,7 +3,7 @@ var Map = React.createClass({
     const x = this.props.getX();
     const y = this.props.getY();
     if(event.key == " "){
-      this.props.changeState(0);
+      this.props.changeState(2);
     }
     else if(event.key == "w"){
       this.props.setPosition("up");

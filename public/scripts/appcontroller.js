@@ -74,7 +74,7 @@ var AppController = React.createClass({
   },
 
   getInitialState: function(){
-    return {gameState: 3};
+    return {gameState: 0};
   },
 
   changeState: function(newState){
@@ -97,7 +97,7 @@ var AppController = React.createClass({
       const name = this.props.name;
       const score = this.props.score;
       axios.post('/api/scores/' + name + '/' + score);
-      this.changeState(2);
+      this.changeState(3);
     }
     this.updateTurns();
   },
@@ -108,7 +108,7 @@ var AppController = React.createClass({
       const name = this.props.name;
       const score = this.props.score;
       axios.post('/api/scores/' + name + '/' + score);
-      this.changeState(2);
+      this.changeState(3);
     }
   },
 
@@ -119,10 +119,10 @@ var AppController = React.createClass({
 
   render: function(){
     var message = "";
-    if (this.state.gameState == 0){
+    if (this.state.gameState == 0) {
       message = (
         <div className="col-xs-9 game-item">
-          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} updateBalls={this.updateBalls} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean} addPokemon={this.addPokemon}/>
+          <NewGameScreen changeState={this.changeState} getName={this.getName} changeName={this.changeName}/>
         </div>
       )
     }
@@ -133,17 +133,17 @@ var AppController = React.createClass({
         </div>
       )
     }
-    else if (this.state.gameState == 2) {
+    if (this.state.gameState == 2){
       message = (
         <div className="col-xs-9 game-item">
-          <GameOver changeState={this.changeState} getName={this.getName} resetScore={this.resetScore}/>
+          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} updateBalls={this.updateBalls} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean} addPokemon={this.addPokemon}/>
         </div>
       )
     }
     else if (this.state.gameState == 3) {
       message = (
         <div className="col-xs-9 game-item">
-          <NewGameScreen changeState={this.changeState} getName={this.getName} changeName={this.changeName}/>
+          <GameOver changeState={this.changeState} getName={this.getName} resetScore={this.resetScore}/>
         </div>
       )
     }

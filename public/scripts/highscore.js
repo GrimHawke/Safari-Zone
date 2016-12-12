@@ -14,7 +14,7 @@ var HighScoreScreen = React.createClass({
   },
 
   goBack: function(){
-    this.props.changeState(3);
+    this.props.changeState(0);
   },
 
   render: function(){

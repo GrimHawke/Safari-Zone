@@ -13,6 +13,12 @@ var GameOver = React.createClass({
     });
   },
 
+
+  toMainMenu: function() {
+    this.props.resetScore();
+    this.props.changeState(0);
+  },
+
   render: function() {
     var name = this.props.getName();
     var playerscores = this.state.playerscores;
@@ -52,10 +58,5 @@ var GameOver = React.createClass({
         </div>
       </div>
     );
-  },
-
-  toMainMenu: function() {
-    this.props.resetScore();
-    this.props.changeState(3);
   }
 });
