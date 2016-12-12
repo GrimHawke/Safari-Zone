@@ -56,6 +56,20 @@ var map = {
 	special: {
 		0: {name:"mew",rarity:150},
 		length: 1
+	},
+	mewchance: {
+		0: {name:"abra",rarity:50},
+		1: {name:"bulbasaur",rarity:30},
+		2: {name:"caterpie",rarity:10},
+		3: {name:"charmander",rarity:30},
+		4: {name:"dratini",rarity:80},
+		5: {name:"gastly",rarity:60},
+		6: {name:"krabby",rarity:40},
+		7: {name:"pikachu",rarity:30},
+		8: {name:"rattata",rarity:10},
+		9: {name:"squirtle",rarity:30},
+		10: {name:"zubat",rarity:10},
+		length: 11
 	}
 }
 
@@ -63,9 +77,25 @@ router.get('/', function(req, res){
 	res.send('Welcome to the Safari Zone API!');
 });
 
-router.get('/generate/:tile/:nearocean', function(req, res){
+router.get('/mewpoke/:name', function(req, res){
+	for (var i in map['mewchance']) {
+		if (map['mewchance'][i]['name'] == req.params.name) {
+			return map['mewchance'][i]['rarity']/10;
+		}
+	}
+	return 0;
+});
+
+router.get('/generate/:tile/:nearocean/:mewchance', function(req, res){
   //Currently generates a random number between 0 and 9
   //Will need a lookup table to find which Pokemon this i
+	if (req.params.tile == "green") {
+		var rand = Math.floor(Math.random()*30);
+		if (rand <= req.params.mewchance) {
+			res.json(map['special'][0]);
+			return;
+		}
+	}
   var rand = Math.floor(Math.random()*(map[req.params.tile]['length']+map['ocean']['length']*req.params.nearocean));
 	if (req.params.nearocean==1 && rand >= map[req.params.tile]['length']) {
 		res.json(map['ocean'][rand-map[req.params.tile]['length']]);

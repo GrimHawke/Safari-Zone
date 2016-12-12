@@ -165,7 +165,7 @@ var BattleBoy = React.createClass({
 
   componentWillMount: function() {
     const a = this;
-    var apicall = '/api/generate/' + this.props.getTile() + '/' + this.props.getNearOcean();
+    var apicall = '/api/generate/' + this.props.getTile() + '/' + this.props.getNearOcean() + '/' + this.props.getMewChance();
     axios.get(apicall).then(function(value){
       a.setState({
         pokemon: value.data.name,
@@ -223,16 +223,6 @@ var BattleBoy = React.createClass({
         </td>
       </tr>
     </table>);
-    /**
-    <tr className="ui">
-      <td>
-        ROCK
-      </td>
-      <td onClick={this.changeStateDummy}>
-        RUN
-      </td>
-    </tr>
-    **/
   }
 });
 
@@ -389,7 +379,8 @@ var GameScreen = React.createClass({
       "nearocean": 1,
       "position": "down",
       "name": "Ash",
-      "pokemon": []
+      "pokemon": [],
+      "mewchance": 0
     });
   },
 
@@ -403,9 +394,34 @@ var GameScreen = React.createClass({
     this.props.nearocean = 1;
     this.props.position = "down";
     this.props.pokemon = [];
+    this.props.mewchance = 0;
+  },
+
+  setMewChance: function(number) {
+    this.props.mewchance = number;
+  },
+
+  getMewChance: function() {
+    return this.props.mewchance;
   },
 
   addPokemon: function(pokemon) {
+    var alreadycaught = false;
+    for(var i in this.props.pokemon) {
+      if(pokemon.name==this.props.pokemon[i].name) {
+        alreadycaught = true;
+      }
+    }
+    if (pokemon.name=="mew") {
+      this.props.mewchance = 0;
+    }
+    else if (alreadycaught != true) {
+      var apicall = '/api/mewpoke/' + pokemon.name;
+      axios.get(apicall).then(function(value){
+        this.setMewChance(this.props.mewchance+value);
+        console.log(this.props.mewchance);
+      })
+    }
     this.props.pokemon.push(pokemon);
   },
 
@@ -501,7 +517,7 @@ var GameScreen = React.createClass({
     if (this.state.gameState == 0){
       message = (
         <div className="col-xs-9 game-item">
-          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} updateBalls={this.updateBalls} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean} addPokemon={this.addPokemon}/>
+          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} updateBalls={this.updateBalls} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean} addPokemon={this.addPokemon} getMewChance={this.getMewChance}/>
         </div>
       )
     }
