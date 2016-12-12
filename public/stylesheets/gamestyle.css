@@ -31,6 +31,7 @@ table.game tr.ui td{
   -ms-user-select: none;
   user-select: none;
   cursor:pointer;
+  height:120px;
 }
 table.bird{
   table-layout: fixed;
@@ -52,10 +53,80 @@ div.gameover{
   width: 750px;
   height: 580px;
   text-align: center;
+  vertical-align: middle;
+}
+
+div.gameover:first-child{
   font-weight: bold;
   font-size: 30px;
-  vertical-align:middle;
 }
+
+div.button {
+  border-style: solid;
+  font-weight: bold;
+  border-width: 1px;
+  margin: 2px 0px 4px 0px;
+  padding: 10px 0px 10px 0px;
+  cursor: pointer;
+  text-align: center;
+  vertical-align:middle;
+  font-size: 14px;
+  width: 360px;
+}
+
+table.highscore {
+  border-style: solid dotted;
+  border-width: 3px 1px 3px 1px;
+  width: 500px;
+  border-color: black;
+  margin-top: 5px;
+  margin-bottom: 25px;
+}
+
+table.highscore tr{
+  border-style: solid none solid none;
+  border-width: 3px;
+  border-color: black;
+}
+
+table.highscore th {
+  border-style: none dashed;
+  padding: 3px 5px 3px 5px;
+  border-width: 1px;
+  border-color: gray;
+}
+
+table.highscore td{
+  border-style: none dashed;
+  padding: 3px 5px 3px 5px;
+  border-width: 1px;
+  border-color: gray;
+}
+
+div.highscorepage > div{
+  margin: 5px 0px 15px 0px;
+}
+
+div.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 30px;
+}
+
 img {
   image-rendering: pixelated;
+}
+
+table.caught tr td{
+  padding: 0px 2px 0px 10px;
+}
+
+h2 {
+  font-weight: bold;
+  font-size: 30px;
+}
+
+img.tinypoke {
+  width: 32px;
+  height: 32px;
 }

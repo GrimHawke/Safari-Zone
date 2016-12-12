@@ -4,19 +4,22 @@ var MongoClient = require('mongodb').MongoClient;
 var myCollection;
 var map = {
 	sandybrown: {
-		0: {name:"gastly",rarity:50},
-		1: {name:"sandile",rarity:30},
+		0: {name:"gastly",rarity:60},
+		1: {name:"sandile",rarity:40},
 		2: {name:"scraggy",rarity:30},
-		3: {name:"shuckle",rarity:60},
+		3: {name:"shuckle",rarity:70},
 		4: {name:"rattata",rarity:10},
-		length: 5
+		5: {name:"numel",rarity:50}
+		length: 6
 	},
 	darkgreen: {
 		0: {name:"bulbasaur",rarity:30},
 		1: {name:"caterpie",rarity:10},
 		2: {name:"foongus",rarity:30},
 		3: {name:"heracross",rarity:70},
-		length: 4
+		4: {name:"rotom", rarity:80},
+		5: {name:"duskull", rarity:60}
+		length: 6
 	},
 	green: {
 		0: {name:"abra",rarity:50},
@@ -29,7 +32,7 @@ var map = {
 	darkslategray: {
 		0: {name:"abra",rarity:50},
 		1: {name:"dratini",rarity:80},
-		2: {name:"gastly",rarity:50},
+		2: {name:"gastly",rarity:60},
 		3: {name:"natu",rarity:40},
 		4: {name:"scraggy",rarity:30},
 		5: {name:"squirtle",rarity:30},
@@ -46,6 +49,12 @@ var map = {
 	},
 	ocean: {
 		0: {name:"wingull",rarity:30},
+		1: {name:"corsola",rarity:60},
+		2: {name:"krabby",rarity:40},
+		length: 3
+	},
+	special: {
+		0: {name:"mew",rarity:150},
 		length: 1
 	}
 }
@@ -79,11 +88,11 @@ router.get('/players', function(req, res){
 });
 
 router.get('/scores', function(req, res){
-  //Should return a list of the highest or most recent scores in the game
+  //Should return a list of the highest scores in the game
 	var db = MongoClient.connect('mongodb://test1:test1@ds113628.mlab.com:13628/safarizonedb', function(err, db) {
 		if(err) { return console.dir(err); }
 		var myCollection = db.collection('scores');
-		myCollection.find({}, {"name": 1, "score": 1}).sort({score: -1}).limit(10).toArray(function(err, items){
+		myCollection.find().sort({score: -1}).limit(10).toArray(function(err, items){
 			if(err) throw err;
 			else res.send(items);
 		});
@@ -111,7 +120,7 @@ router.post('/scores/:id/:score', function(req, res){
   //Should update scores for a specified player based on what is contained in the request body;
   var myscore = req.params.score;
   var myplayer = req.params.id;
-	var mydate = new Date().getTime()/100;
+	var mydate = new Date().getTime();
 
 
 	var db = MongoClient.connect('mongodb://test1:test1@ds113628.mlab.com:13628/safarizonedb', function(err, db) {

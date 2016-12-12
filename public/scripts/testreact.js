@@ -2,12 +2,22 @@ var Sidebar = React.createClass({
   render: function(){
     return(
       <div className="col-xs-3 game-item" style={{borderLeft:'2px solid black', paddingLeft:'10px'}}>
-        <div style={{height:'350px'}}>
-          <div style={{textAlign:'center', margin:'10px'}}><b>Score:</b> {this.props.score}</div>
+        <div style={{height:'420px'}}>
+          <div style={{textAlign:'center', margin:'10px'}}>
+            <b>Score: </b>
+            {this.props.score}
+          </div>
+          <div style={{textAlign:'center', margin:'10px'}}>
+            <b>Encounters Remaining: </b>
+            {this.props.turns}/20
+          </div>
+          <div style={{textAlign:'center', margin:'10px'}}>
+            <b>Pokeballs Remaining: </b>
+            {this.props.balls}/10
+          </div>
           <div>
             <b>Pokemon Caught:</b>
-            <div>lol there are no sprites for this yet</div>
-            <div>but there will be sprites here</div>
+            <PokemonCaught pokemon={this.props.pokemon}/>
           </div>
         </div>
         <div>
@@ -20,12 +30,34 @@ var Sidebar = React.createClass({
   }
 });
 
+var PokemonCaught = React.createClass({
+  getDefaultProps: function() {
+    return ({
+      "pokemon":[]
+    });
+  },
+
+  render: function(){
+    var pokemon = this.props.pokemon;
+    var rows = [];
+    for (var i in pokemon) {
+      var columns = [];
+      var path = "/pictures/" + pokemon[i].pokemon + ".gif";
+      var name = pokemon[i].pokemon.charAt(0).toUpperCase() + pokemon[i].pokemon.slice(1);
+      columns.push(<td><img className="tinypoke" src={path}/></td>);
+      columns.push(<td><b>{name}</b></td>);
+      rows.push(<tr>{columns}</tr>);
+    }
+    return (<table className="caught">{rows}</table>);
+  }
+});
+
 var Map = React.createClass({
   keyPressed: function(event){
     const x = this.props.getX();
     const y = this.props.getY();
     if(event.key == " "){
-      this.props.changeState();
+      this.props.changeState(0);
     }
     else if(event.key == "w"){
       this.props.setPosition("up");
@@ -139,7 +171,6 @@ var BattleBoy = React.createClass({
         pokemon: value.data.name,
         rarity: value.data.rarity
       });
-      return value.data;
     });
   },
 
@@ -147,13 +178,23 @@ var BattleBoy = React.createClass({
     return "pictures/" + this.state.pokemon + ".png";
   },
 
+  changeStateDummy: function(){
+    this.props.changeState(1);
+  },
+
   changeStateAndCatch: function(){
-    this.setState({caught: 1}, () => {this.props.changeState();});
+    this.setState({caught: 1}, () => {this.props.changeState(1);});
   },
 
   componentWillUnmount: function() {
     this.props.updateScore(this.state.rarity*this.state.caught);
-    this.props.updateTurns();
+    if(this.state.caught) {
+      this.props.addPokemon({pokemon: this.state.pokemon, rarity: this.state.rarity});
+      this.props.updateBalls();
+    }
+    else{
+      this.props.updateTurns();
+    }
   },
 
   render: function() {
@@ -177,19 +218,21 @@ var BattleBoy = React.createClass({
         <td onClick={this.changeStateAndCatch}>
           BALL
         </td>
-        <td>
-          BAIT
-        </td>
-      </tr>
-      <tr className="ui">
-        <td>
-          ROCK
-        </td>
-        <td onClick={this.props.changeState}>
+        <td onClick={this.changeStateDummy}>
           RUN
         </td>
       </tr>
     </table>);
+    /**
+    <tr className="ui">
+      <td>
+        ROCK
+      </td>
+      <td onClick={this.changeStateDummy}>
+        RUN
+      </td>
+    </tr>
+    **/
   }
 });
 
@@ -197,7 +240,138 @@ var GameOver = React.createClass({
   render: function() {
     return (
       <div className="gameover">
-        GAME!
+        <div>
+          GAME!
+        </div>
+        <div style={{margin: '20px 0px 20px 0px'}}>
+        </div>
+        <div>
+          <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.toMainMenu}>
+            To Main Screen
+          </div>
+        </div>
+      </div>
+    );
+  },
+
+  toMainMenu: function() {
+    this.props.resetScore();
+    this.props.changeState(3);
+  }
+});
+
+var HighScoreScreen = React.createClass({
+  getInitialState: function(){
+    return({highscores:[{name: "Ash", score: 0, date: "???"}]});
+  },
+
+  componentWillMount: function() {
+    const a = this;
+    var apicall = '/api/scores'
+    axios.get(apicall).then(function(value){
+      a.setState({
+        highscores: value.data
+      });
+    });
+  },
+
+  goBack: function(){
+    this.props.changeState(3);
+  },
+
+  render: function(){
+    var highscores = this.state.highscores;
+    var rows = [];
+    rows.push(
+      <tr>
+        <th>Name</th>
+        <th>Score</th>
+        <th>Date</th>
+      </tr>
+    );
+    for (var i in highscores) {
+      var columns = [];
+      var date = JSON.stringify(new Date(highscores[i].date));
+      date = date.substring(1,11) + ", " + date.substring(12,17) + " UTC";
+      columns.push(<td>{highscores[i].name}</td>);
+      columns.push(<td>{highscores[i].score} points</td>);
+      columns.push(<td>{date}</td>);
+      rows.push(<tr>{columns}</tr>);
+    }
+    return (
+      <div className="highscorepage" style={{padding: "5px 8px 5px 8px"}}>
+        <div className="title" onClick={this.goBack}>
+          HIGH SCORES
+        </div>
+        <div>
+          <table className="highscore" style={{marginLeft: "auto", marginRight: "auto"}}>
+            {rows}
+          </table>
+        </div>
+        <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.goBack}>
+          To Main Screen
+        </div>
+      </div>
+    );
+  }
+
+});
+
+var NewGameScreen = React.createClass({
+  toMap: function(){
+    this.props.changeState(1);
+  },
+
+  toHighScores: function(){
+    this.props.changeState(4);
+  },
+
+  componentDidMount(){
+    $('#name_field').val(this.props.getName());
+  },
+
+  componentWillUnmount(){
+    this.props.changeName($('#name_field').val());
+  },
+
+  render: function() {
+    var message = "";
+    message = (
+      <table>
+        <tr>
+          <td>
+            <img src="/pictures/sideimage.png"/>
+          </td>
+          <td>
+            <div style={{textAlign:'center', padding:'10px 0px 10px 0px'}}>
+              Welcome to the Safari Zone! Please enter your name.
+            </div>
+            <div>
+              <label>
+                Name:&nbsp;&nbsp;
+                <input id="name_field" type="text" name="name" style={{width:'310px'}}/>
+              </label>
+            </div>
+            <div className="button" style={{margin:'0px 0px 35px 0px'}} onClick={this.toMap}>
+              Here we go!
+            </div>
+            <div className="button" style={{margin:'2px 0px 4px 0px'}} onClick={this.toHighScores}>
+              High Scores
+            </div>
+            <div className="button" style={{margin:'2px 0px 4px 0px'}}>
+              View All Players
+            </div>
+            <div style={{margin:'2px 0px 4px 0px', padding:'10px 0px 10px 0px'}}>
+
+            </div>
+          </td>
+        </tr>
+      </table>
+    );
+
+    return(
+      <div>
+        {message}
       </div>
     );
   }
@@ -207,13 +381,40 @@ var GameScreen = React.createClass({
   getDefaultProps: function() {
     return({
       "score": 0,
-      "turns": 10,
+      "turns": 20,
+      "balls": 10,
       "xloc": 10,
       "yloc": 10,
       "tile": "darkgreen",
       "nearocean": 1,
-      "position": "down"
+      "position": "down",
+      "name": "Ash",
+      "pokemon": []
     });
+  },
+
+  resetScore: function() {
+    this.props.score = 0;
+    this.props.turns = 20;
+    this.props.balls = 10;
+    this.props.xloc = 10;
+    this.props.yloc = 10;
+    this.props.tile = "darkgreen";
+    this.props.nearocean = 1;
+    this.props.position = "down";
+    this.props.pokemon = [];
+  },
+
+  addPokemon: function(pokemon) {
+    this.props.pokemon.push(pokemon);
+  },
+
+  getName: function(){
+    return this.props.name;
+  },
+
+  changeName: function(newname){
+    this.props.name = newname;
   },
 
   setPosition: function(newposition) {
@@ -252,12 +453,12 @@ var GameScreen = React.createClass({
   },
 
   getInitialState: function(){
-    return{gameState: 1}
+    return {gameState: 3};
   },
 
-  changeState: function(){
+  changeState: function(newState){
     this.setState({
-      gameState: (this.state.gameState + 1)%2
+      gameState: newState
     })
   },
 
@@ -269,13 +470,24 @@ var GameScreen = React.createClass({
     return this.props.tile;
   },
 
-  updateTurns: function() {
-    this.props.turns -= 1;
-    if (this.props.turns < 0) {
-      this.setState({gameState:2})
-      const name = "ABC";
+  updateBalls: function() {
+    this.props.balls -= 1;
+    if (this.props.balls <= 0) {
+      const name = this.props.name;
       const score = this.props.score;
       axios.post('/api/scores/' + name + '/' + score);
+      this.changeState(2);
+    }
+    this.updateTurns();
+  },
+
+  updateTurns: function() {
+    this.props.turns -= 1;
+    if (this.props.turns <= 0) {
+      const name = this.props.name;
+      const score = this.props.score;
+      axios.post('/api/scores/' + name + '/' + score);
+      this.changeState(2);
     }
   },
 
@@ -289,7 +501,7 @@ var GameScreen = React.createClass({
     if (this.state.gameState == 0){
       message = (
         <div className="col-xs-9 game-item">
-          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean}/>
+          <BattleBoy updateScore={this.updateScore} updateTurns={this.updateTurns} updateBalls={this.updateBalls} changeState={this.changeState} getTile={this.getTile} getNearOcean={this.getNearOcean} addPokemon={this.addPokemon}/>
         </div>
       )
     }
@@ -300,17 +512,31 @@ var GameScreen = React.createClass({
         </div>
       )
     }
-    else {
+    else if (this.state.gameState == 2) {
       message = (
         <div className="col-xs-9 game-item">
-          <GameOver />
+          <GameOver changeState={this.changeState} resetScore={this.resetScore}/>
+        </div>
+      )
+    }
+    else if (this.state.gameState == 3) {
+      message = (
+        <div className="col-xs-9 game-item">
+          <NewGameScreen changeState={this.changeState} getName={this.getName} changeName={this.changeName}/>
+        </div>
+      )
+    }
+    else if (this.state.gameState == 4){
+      message = (
+        <div className="col-xs-9 game-item">
+          <HighScoreScreen changeState={this.changeState}/>
         </div>
       )
     }
     return(
       <div className="row">
         {message}
-        <Sidebar score={this.props.score}/>
+        <Sidebar score={this.props.score} turns={this.props.turns} balls={this.props.balls} pokemon={this.props.pokemon}/>
       </div>
     );
   }
