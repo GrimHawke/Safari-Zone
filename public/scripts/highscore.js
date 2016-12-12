@@ -37,15 +37,13 @@ var HighScoreScreen = React.createClass({
       rows.push(<tr>{columns}</tr>);
     }
     return (
-      <div className="highscorepage" style={{padding: "5px 8px 5px 8px"}}>
+      <div>
         <div className="title">
           HIGH SCORES
         </div>
-        <div>
-          <table className="highscore" style={{marginLeft: "auto", marginRight: "auto"}}>
-            {rows}
-          </table>
-        </div>
+        <table className="scoretable">
+          {rows}
+        </table>
         <div className="button" style={{cursor:'pointer', margin: 'auto'}} onClick={this.goBack}>
           To Main Screen
         </div>

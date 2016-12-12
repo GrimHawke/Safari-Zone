@@ -10,17 +10,21 @@ table.game{
   margin-top:5px;
   margin-left:1px;
 }
+
 table.game tr td{
   text-align:center;
   vertical-align:bottom;
   padding: 0px;
 }
+
 img.pokemon {
   max-width:150px;
 }
+
 img.boy {
   max-width:200px;
 }
+
 table.game tr.ui td{
   vertical-align:middle;
   border: solid;
@@ -33,6 +37,7 @@ table.game tr.ui td{
   cursor:pointer;
   height:120px;
 }
+
 table.bird{
   table-layout: fixed;
   width: 750px;
@@ -43,12 +48,14 @@ table.bird{
   margin-top:5px;
   margin-left:1px;
 }
+
 table.bird tr td{
   font-size: 2px;
   padding: 0px;
   height: 31px;
   width: 31px;
 }
+
 div.gameover{
   width: 750px;
   height: 580px;
@@ -74,44 +81,48 @@ div.button {
   width: 360px;
 }
 
-table.highscore {
+.scoretable{
+  font-size: 14px;
   border-style: solid dotted;
   border-width: 3px 1px 3px 1px;
   width: 500px;
   border-color: black;
   margin-top: 5px;
   margin-bottom: 25px;
-  font-size: 14px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-table.highscore tr{
+.scoretable tr{
   border-style: solid none solid none;
   border-width: 3px;
   border-color: black;
 }
 
-table.highscore th {
+.scoretable th{
   border-style: none dashed;
   padding: 3px 5px 3px 5px;
   border-width: 1px;
   border-color: gray;
 }
 
-table.highscore td{
+.scoretable td{
   border-style: none dashed;
   padding: 3px 5px 3px 5px;
   border-width: 1px;
   border-color: gray;
 }
 
-div.highscorepage > div{
-  margin: 5px 0px 15px 0px;
-}
-
-div.title {
+.title {
   text-align: center;
   font-weight: bold;
   font-size: 30px;
+}
+
+.title2 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
 }
 
 img {
